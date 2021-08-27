@@ -1,0 +1,8 @@
+const config = {
+  dir_path: '/Users/sanmuny/react-hooks',
+  strip_patterns: [/ /g],
+  replace_patterns: [/:/g, /?/g],
+  replace_char: '-',
+};
+
+export default config;
