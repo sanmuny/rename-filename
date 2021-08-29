@@ -4,7 +4,7 @@ import config from './config.js';
 
 const getFileList = (dirPath) => fs.readdirSync(dirPath);
 
-const renameFiles = (fileList) => {
+const renameFiles = (fileList, subPath) => {
   fileList.forEach((fileName) => {
     let newFileName = fileName;
     config.strip_patterns.forEach((pattern) => {
@@ -13,8 +13,8 @@ const renameFiles = (fileList) => {
     config.replace_patterns.forEach((pattern) => {
       newFileName = newFileName.replace(pattern, '-');
     });
-    fs.renameSync(path.join(config.dir_path, fileName),
-      path.join(config.dir_path, newFileName));
+    fs.renameSync(path.join(config.dir_path, subPath, fileName),
+      path.join(config.dir_path, subPath, newFileName));
     console.log(`Renamed file from ${fileName} to ${newFileName}`);
   });
 };
@@ -24,9 +24,11 @@ const main = () => {
     console.error('dir_path config is required.');
     return -1;
   }
-  const fileList = getFileList(config.dir_path);
-  console.log(fileList);
-  renameFiles(fileList);
+  config.sub_paths.forEach((subPath) => {
+    const fileList = getFileList(path.join(config.dir_path, subPath));
+    renameFiles(fileList, subPath);
+  });
+
   return 0;
 };
 
